@@ -9,8 +9,19 @@ using System.Linq;
 
 public class SaveSnapShot : MonoBehaviour
 {
-	void Start ()
+    //variables to get Server and transformName from servermode
+    ServerMode Server = new ServerMode();
+    public string transformName, directory;
+
+
+    void Start ()
 	{
+        //create directory to save trajectories and use transformName as... name
+        transformName = Server.transformName;
+        directory = Application.persistentDataPath + "/trajectory_data/" + transformName + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss-tt");
+
+        Directory.CreateDirectory(directory);
+
         //		string json = saveJSON();
         //		loadJSON(json);
         //Debug.Log("WTF!");
@@ -18,7 +29,7 @@ public class SaveSnapShot : MonoBehaviour
 
         //toy function to test transform.TransformPoint
         //testcube();
-	}
+    }
 
     //private float nextActionTime = 0.0f;
     //public float period = 100000f;
@@ -459,8 +470,25 @@ public class SaveSnapShot : MonoBehaviour
         Debug.Log("json " + json);
         Debug.Log("step " + step);
 
-        File.WriteAllText("D:/trajectory_data/gamesave_list_test_"+ step.ToString() + ".jsonbrn", json);
+        //File.WriteAllText("D:/trajectory_data/gamesave_list_test_"+ step.ToString() + ".jsonbrn", json);//not multiplatform, try something else 
+        //File.WriteAllText("/mnt/d/trajectory_data/gamesave_list_test_" + step.ToString() + ".jsonbrn", json);//not multiplatform, try something else 
+        //File.WriteAllText(Application.persistentDataPath + "/trajectory_data/gamesave_list_test_" + step.ToString() + ".jsonbrn", json);
+        //Debug.Log("writing " + Application.persistentDataPath + "/trajectory_data/gamesave_list_test_" + step.ToString() + ".jsonbrn");
 
+        //multiplatform but writing empty saves WTF
+        //if (Directory.Exists(Application.persistentDataPath + "/trajectory_data"))
+        if (Directory.Exists(directory))
+        {
+            //File.WriteAllText(Application.persistentDataPath + "/trajectory_data/gamesave_list_test_" + step.ToString() + ".jsonbrn", json);
+            File.WriteAllText(directory + "/gamesave_list_test_" + step.ToString() + ".jsonbrn", json);
+        }
+        //else
+        //{
+        //    var folder = Directory.CreateDirectory(Application.persistentDataPath + "/trajectory_data");
+        //}
+
+
+        //File.WriteAllText("/trajectory_data/gamesave_list_test_" + step.ToString() + ".jsonbrn", json);
     }
 
     //public void saveJSON()
